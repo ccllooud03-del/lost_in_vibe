@@ -83,7 +83,7 @@ export default function App() {
               </AnimatePresence>
             </div>
 
-            <p className="mt-4 mb-6 z-10 text-white/30 text-[10px] font-black tracking-[0.4em] uppercase">
+            <p className="mt-20 mb-6 z-10 text-white/30 text-[10px] font-black tracking-[0.4em] uppercase text-center w-full">
               Lost In Vibe • Anastasia Edition
             </p>
           </>
