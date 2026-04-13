@@ -3,7 +3,7 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { ThumbsUp, ThumbsDown, Volume2 } from 'lucide-react';
 import { useSpeech } from '../hooks/useSpeech';
 
-export function VibeCard({ card, onAction, zIndex }) {
+export function VibeCard({ card, onAction, zIndex, custom }) {
   const { speak, isSpeaking } = useSpeech();
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-10, 10]);
@@ -18,26 +18,32 @@ export function VibeCard({ card, onAction, zIndex }) {
   };
 
   const hasImage = card.image_url && card.image_url.length > 5 && card.image_url !== '-' && !card.image_url.includes('<a');
-  const imageUrl = hasImage ? card.image_url : (card.fallback_meme || null);
 
   return (
     <motion.div 
       className="glass-card p-6 w-full absolute top-0 left-0"
       style={{ x, rotate, opacity, zIndex }}
       drag="x"
+      custom={custom}
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={handleDragEnd}
       initial={{ scale: 0.95, opacity: 0, y: 30 }}
       animate={{ scale: 1, opacity: 1, y: 0 }}
-      exit={{ x: x.get() > 0 ? 300 : -300, opacity: 0, transition: { duration: 0.2 } }}
+      exit={(direction) => ({ x: direction === 'right' ? 300 : -300, opacity: 0, transition: { duration: 0.2 } })}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       whileDrag={{ scale: 1.05 }}
     >
       <div className="relative w-full h-80 mb-6 rounded-[32px] overflow-hidden shadow-2xl">
-        {imageUrl ? (
-          <img src={imageUrl} alt={card.word} className="w-full h-full object-cover pointer-events-none" />
+        {hasImage ? (
+          <img src={card.image_url} alt={card.word} className="w-full h-full object-cover pointer-events-none" />
         ) : (
-          <div className="placeholder-grad pointer-events-none">{card.word[0]}</div>
+          <div className="placeholder-grad pointer-events-none flex items-center justify-center">
+            {card.emoji_fallback ? (
+              <span className="text-[6rem] drop-shadow-2xl">{card.emoji_fallback}</span>
+            ) : (
+              <span className="text-[4rem] text-white opacity-80">{card.word[0]}</span>
+            )}
+          </div>
         )}
       </div>
 
@@ -45,7 +51,7 @@ export function VibeCard({ card, onAction, zIndex }) {
         <div className="flex items-center justify-center gap-3 mb-2 w-full">
           <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tighter w-full leading-tight">{card.word}</h2>
           <button 
-            onClick={() => speak(card.correct_translation_en || card.translation || card.word)}
+            onClick={() => speak(card.correct_translation_en || card.word)}
             className={`flex-shrink-0 p-2.5 rounded-full transition-all duration-300 shadow-lg ${isSpeaking ? 'text-indigo-300 bg-indigo-500/30 scale-110' : 'text-slate-300 bg-white/5 hover:bg-white/15'}`}
           >
             <Volume2 size={24} />

@@ -17,40 +17,17 @@ export default function App() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [exitDirection, setExitDirection] = useState('left');
 
   useEffect(() => {
     async function loadCards() {
       const { data, error } = await supabase.from('vibes').select('*');
-      
-      let memesList = [];
-      try {
-        const memeRes = await fetch('https://meme-api.com/gimme/memes/50');
-        const memeData = await memeRes.json();
-        if (memeData && memeData.memes) {
-          memesList = memeData.memes.map(m => m.url);
-        }
-      } catch (e) {
-        console.error('Meme fetch error', e);
-      }
-
       let combined = [...localProverbs];
       if (data && data.length > 0) {
         combined = [...combined, ...data];
       }
-      
-      let memeIndex = 0;
-      const finalCards = combined.map(card => {
-        const hasImage = card.image_url && card.image_url.length > 5 && card.image_url !== '-' && !card.image_url.includes('<a');
-        if (!hasImage && memesList.length > 0) {
-           const assignedMeme = memesList[memeIndex % memesList.length];
-           memeIndex++;
-           return { ...card, fallback_meme: assignedMeme };
-        }
-        return card;
-      });
-
-      if (finalCards.length > 0) {
-        setCards(shuffleSequence(finalCards));
+      if (combined.length > 0) {
+        setCards(shuffleSequence(combined));
       }
       setIsLoading(false);
     }
@@ -58,6 +35,7 @@ export default function App() {
   }, []);
 
   const handleAction = (direction) => {
+    setExitDirection(direction);
     if (currentIndex < cards.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
@@ -94,12 +72,13 @@ export default function App() {
             </div>
 
             <div className="relative w-full flex-grow max-h-[620px] mb-4">
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="wait" custom={exitDirection}>
                 <VibeCard 
                   key={cards[currentIndex].id || currentIndex} 
                   card={cards[currentIndex]} 
                   onAction={handleAction} 
                   zIndex={10} 
+                  custom={exitDirection}
                 />
               </AnimatePresence>
             </div>
