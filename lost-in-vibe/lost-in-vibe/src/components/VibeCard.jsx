@@ -25,7 +25,7 @@ export function VibeCard({ card, onAction, zIndex, custom }) {
 
   return (
     <motion.div 
-      className="glass-card p-6 w-full absolute top-0 left-0"
+      className="glass-card p-6 w-full relative"
       style={{ x, rotate, opacity, zIndex }}
       drag="x"
       custom={custom}

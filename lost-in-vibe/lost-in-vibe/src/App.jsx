@@ -50,15 +50,15 @@ export default function App() {
       <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] bg-indigo-600/20 rounded-full blur-[100px] animate-blob -z-10 mix-blend-screen pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[70vw] h-[70vw] max-w-[600px] max-h-[600px] bg-pink-600/10 rounded-full blur-[100px] animate-blob animation-delay-2000 -z-10 mix-blend-screen pointer-events-none"></div>
 
-      <div className="flex flex-col items-center justify-center min-h-[100dvh] w-full max-w-sm mx-auto px-4 relative">
+      <div className="flex flex-col min-h-[100dvh] w-full max-w-sm mx-auto px-4 py-8 relative">
         {isLoading || cards.length === 0 ? (
-          <div className="text-white text-opacity-50 tracking-widest animate-pulse font-bold flex flex-col items-center gap-4">
+          <div className="flex-grow flex flex-col items-center justify-center text-white/50 tracking-widest animate-pulse font-bold gap-4">
             <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
             VIBE CHECK...
           </div>
         ) : (
-          <>
-            <div className="w-full mb-8 mt-4 pt-4">
+          <div className="flex flex-col h-full flex-grow">
+            <div className="w-full mb-6 flex-shrink-0">
               <div className="flex justify-between text-xs text-white/40 font-bold uppercase tracking-widest mb-3">
                 <span>Прогресс</span>
                 <span>{currentIndex + 1} / {cards.length}</span>
@@ -71,7 +71,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="relative w-full flex-grow max-h-[620px] mb-4">
+            <div className="relative w-full flex-grow flex items-center justify-center min-h-[500px]">
               <AnimatePresence mode="wait" custom={exitDirection}>
                 <VibeCard 
                   key={cards[currentIndex].id || currentIndex} 
@@ -83,10 +83,10 @@ export default function App() {
               </AnimatePresence>
             </div>
 
-            <p className="mt-20 mb-6 z-10 text-white/30 text-[10px] font-black tracking-[0.4em] uppercase text-center w-full">
+            <p className="mt-8 text-white/30 text-[10px] font-black tracking-[0.4em] uppercase text-center w-full flex-shrink-0">
               Lost In Vibe • Anastasia Edition
             </p>
-          </>
+          </div>
         )}
       </div>
     </>
