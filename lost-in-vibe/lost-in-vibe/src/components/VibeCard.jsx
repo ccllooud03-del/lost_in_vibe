@@ -18,6 +18,10 @@ export function VibeCard({ card, onAction, zIndex, custom }) {
   };
 
   const hasImage = card.image_url && card.image_url.length > 5 && card.image_url !== '-' && !card.image_url.includes('<a');
+  
+  // Умный поиск картинок: берем первую часть слова (до пробела)
+  const flickrTag = card.word ? encodeURIComponent(card.word.split(' ')[0]) : 'apple';
+  const flickrUrl = `https://loremflickr.com/600/800/${flickrTag}`;
 
   return (
     <motion.div 
@@ -35,15 +39,9 @@ export function VibeCard({ card, onAction, zIndex, custom }) {
     >
       <div className="relative w-full h-80 mb-6 rounded-[32px] overflow-hidden shadow-2xl">
         {hasImage ? (
-          <img src={card.image_url} alt={card.word} className="w-full h-full object-cover pointer-events-none" />
+          <img src={card.image_url} alt={card.word} className="w-full h-full object-cover pointer-events-none bg-slate-800" />
         ) : (
-          <div className="placeholder-grad pointer-events-none flex items-center justify-center">
-            {card.emoji_fallback ? (
-              <span className="text-[6rem] drop-shadow-2xl">{card.emoji_fallback}</span>
-            ) : (
-              <span className="text-[4rem] text-white opacity-80">{card.word[0]}</span>
-            )}
-          </div>
+          <img src={flickrUrl} alt="Flickr placeholder" className="w-full h-full object-cover pointer-events-none bg-slate-800" />
         )}
       </div>
 
